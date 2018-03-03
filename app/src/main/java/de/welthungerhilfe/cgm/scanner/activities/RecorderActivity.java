@@ -58,6 +58,7 @@ import com.google.atap.tangoservice.TangoOutOfDateException;
 import com.google.atap.tangoservice.TangoPointCloudData;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnClickListener;
 import com.orhanobut.dialogplus.ViewHolder;
 import com.projecttango.tangosupport.TangoSupport;
 
@@ -207,7 +208,7 @@ public class RecorderActivity extends Activity {
             ft.add(R.id.container, babyInfantChooserFragment);
             ft.commit();
 
-        } else if (mScanningWorkflowStep == AppConstants.BABY_FULL_BODY_FRONT_ONBOARDING) {
+        } else if (mScanningWorkflowStep == AppConstants.BABY_ONBOARDING_FULL_BODY_FRONT_SCAN) {
             mOverlaySurfaceView.setMode(OverlaySurface.BABY_OVERLAY);
             babyFront0Fragment = new BabyFront0Fragment();
             ft.replace(R.id.container, babyFront0Fragment, BABY_FRONT_0);
@@ -215,14 +216,10 @@ public class RecorderActivity extends Activity {
             measure.setType("b_v1.0");
 
         } else if (mScanningWorkflowStep == AppConstants.BABY_FULL_BODY_FRONT_SCAN) {
-            mDisplayTextView.setText(R.string.baby_full_body_front_scan_text);
-            //TODO:mOverlaySurfaceView.setIsOverlayScanningProcess(true);
             resumeScan();
+            mDisplayTextView.setText(R.string.baby_full_body_front_scan_text);
 
-        } else if (mScanningWorkflowStep == AppConstants.BABY_FULL_BODY_FRONT_RECORDING) {
-            mIsRecording = true;
-
-        } else if (mScanningWorkflowStep == AppConstants.BABY_LEFT_RIGHT_ONBOARDING) {
+        } else if (mScanningWorkflowStep == AppConstants.BABY_ONBOARDING_LEFT_RIGHT_SCAN) {
             mDisplayTextView.setText(R.string.empty_string);
             babyBack0Fragment = new BabyBack0Fragment();
             ft.replace(R.id.container, babyBack0Fragment, BABY_BACK_0);
@@ -232,13 +229,34 @@ public class RecorderActivity extends Activity {
 
         } else if (mScanningWorkflowStep == AppConstants.BABY_LEFT_RIGHT_SCAN) {
             mDisplayTextView.setText(R.string.baby_left_right_scan_text);
-            //TODO:mOverlaySurfaceView.setIsOverlayScanningProcess(true);
             resumeScan();
+/*
+            scanDialogViewHolder = new ViewHolder(R.layout.dialog_scan_result);
+            scanResultDialog = DialogPlus.newDialog(getApplicationContext())
+                    .setContentHolder(scanDialogViewHolder)
+                    .setCancelable(false)
+                    .setInAnimation(R.anim.abc_fade_in)
+                    .setOutAnimation(R.anim.abc_fade_out)
+                    .setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(DialogPlus dialog, View view) {
+                            switch (view.getId()) {
+                                case R.id.txtRepeat:
+                                    dialog.dismiss();
+                                    mScanningWorkflowStep = AppConstants.BABY_ONBOARDING_LEFT_RIGHT_SCAN;
 
-        } else if (mScanningWorkflowStep == AppConstants.BABY_LEFT_RIGHT_RECORDING) {
-            mIsRecording = true;
+                                    waitScanResult();
+                                    break;
+                                case R.id.btnNext:
+                                    dialog.dismiss();
 
-        } else if (mScanningWorkflowStep == AppConstants.BABY_FULL_BODY_BACK_ONBOARDING) {
+                                    break;
+                            }
+                        }
+                    })
+                    .create();
+*/
+        } else if (mScanningWorkflowStep == AppConstants.BABY_ONBOARDING_FULL_BODY_BACK_SCAN) {
             mDisplayTextView.setText(R.string.empty_string);
             babyBack1Fragment = new BabyBack1Fragment();
             ft.replace(R.id.container, babyBack1Fragment, BABY_BACK_1);
@@ -247,17 +265,13 @@ public class RecorderActivity extends Activity {
 
         } else if (mScanningWorkflowStep == AppConstants.BABY_FULL_BODY_BACK_SCAN) {
             mDisplayTextView.setText(R.string.baby_full_body_back_scan_text);
-            // TODO: mOverlaySurfaceView.setIsOverlayScanningProcess(true);
             resumeScan();
-
-        } else if (mScanningWorkflowStep == AppConstants.BABY_FULL_BODY_BACK_RECORDING) {
-            mIsRecording = true;
 
 /*
 
  */
         // INFANT
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_FULL_BODY_FRONT_ONBOARDING) {
+        } else if (mScanningWorkflowStep == AppConstants.INFANT_ONBOARDING_FULL_BODY_FRONT_SCAN) {
             mOverlaySurfaceView.setMode(OverlaySurface.INFANT_OVERLAY);
             mDisplayTextView.setText(R.string.empty_string);
             infantFullFrontFragment = new InfantFullFrontFragment();
@@ -267,14 +281,9 @@ public class RecorderActivity extends Activity {
 
         } else if (mScanningWorkflowStep == AppConstants.INFANT_FULL_BODY_FRONT_SCAN) {
             mDisplayTextView.setText(R.string.infant_full_body_front_scan_text);
-            // TODO: isInfantFullBodyScanningProcess
-            // mOverlaySurfaceView.setIsOverlayScanningProcess(false);
             resumeScan();
 
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_FULL_BODY_FRONT_RECORDING) {
-            mIsRecording = true;
-
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_360_TURN_ONBOARDING) {
+        } else if (mScanningWorkflowStep == AppConstants.INFANT_ONBOARDING_360_TURN_SCAN) {
             mDisplayTextView.setText(R.string.empty_string);
             infantTurnFragment = new InfantTurnFragment();
             ft.replace(R.id.container, infantTurnFragment, INFANT_TURN);
@@ -283,14 +292,10 @@ public class RecorderActivity extends Activity {
 
         } else if (mScanningWorkflowStep == AppConstants.INFANT_360_TURN_SCAN) {
             mDisplayTextView.setText(R.string.infant_360_turn_scan_text);
-            // TODO: isInfantCloseupScanningProcess? or no overlay and just pointcloudSurface
-            //mOverlaySurfaceView.setIsOverlayScanningProcess(true);
             resumeScan();
 
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_360_TURN_RECORDING) {
-            mIsRecording = true;
 
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_FRONT_UP_DOWN_ONBOARDING) {
+        } else if (mScanningWorkflowStep == AppConstants.INFANT_ONBOARDING_FRONT_UP_DOWN_SCAN) {
             mDisplayTextView.setText(R.string.empty_string);
             infantFrontFragment = new InfantFrontFragment();
             ft.replace(R.id.container, infantFrontFragment, INFANT_FRONT);
@@ -299,14 +304,9 @@ public class RecorderActivity extends Activity {
 
         } else if (mScanningWorkflowStep == AppConstants.INFANT_FRONT_UP_DOWN_SCAN) {
             mDisplayTextView.setText(R.string.infant_front_up_down_scan_text);
-            // TODO: isInfantUpDownScanningProcess? or no overlay and just pointcloudSurface
-            //mOverlaySurfaceView.setIsOverlayScanningProcess(false);
             resumeScan();
 
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_FRONT_UP_DOWN_RECORDING) {
-            mIsRecording = true;
-
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_BACK_UP_DOWN_ONBOARDING) {
+        } else if (mScanningWorkflowStep == AppConstants.INFANT_ONBOARDING_BACK_UP_DOWN_SCAN) {
             mDisplayTextView.setText(R.string.empty_string);
             infantBackFragment = new InfantBackFragment();
             ft.replace(R.id.container, infantBackFragment, INFANT_BACK);
@@ -315,15 +315,10 @@ public class RecorderActivity extends Activity {
 
         } else if (mScanningWorkflowStep == AppConstants.INFANT_BACK_UP_DOWN_SCAN) {
             mDisplayTextView.setText(R.string.infant_back_up_down_scan_text);
-            // TODO: isInfantUpDownScanningProcess? or no overlay and just pointcloudSurface
-            //mOverlaySurfaceView.setIsOverlayScanningProcess(false);
             resumeScan();
 
-        } else if (mScanningWorkflowStep == AppConstants.INFANT_BACK_UP_DOWN_RECORDING) {
-            mIsRecording=true;
-
-            
         } else {
+            measurementFinished();
             Log.v(TAG,"ScanningWorkflow finished for person "+person.getSurname());
             Intent i = new Intent(getApplicationContext(), CreateDataActivity.class);
             i.putExtra(AppConstants.EXTRA_PERSON, person);
@@ -394,6 +389,11 @@ public class RecorderActivity extends Activity {
         return mVideoOutputFile;
     }
 
+    protected void measurementFinished ()
+    {
+
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -426,10 +426,6 @@ public class RecorderActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mIsRecording) {
-                    mIsRecording = false;
-                    record_SwitchChanged();
-                }
                 gotoNextStep();
             }
         });
