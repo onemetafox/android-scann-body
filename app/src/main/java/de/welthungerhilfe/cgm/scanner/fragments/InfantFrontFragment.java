@@ -19,31 +19,44 @@
 
 package de.welthungerhilfe.cgm.scanner.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import de.welthungerhilfe.cgm.scanner.R;
-import de.welthungerhilfe.cgm.scanner.activities.RecorderActivity;
+import de.welthungerhilfe.cgm.scanner.activities.BabyScanActivity;
+import de.welthungerhilfe.cgm.scanner.activities.InfantScanActivity;
 
-public class InfantFrontFragment extends Fragment implements View.OnClickListener {
+/**
+ * Created by Emerald on 2/20/2018.
+ */
+
+public class InfantFrontFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_infant_front, container, false);
-        view.findViewById(R.id.btnStartScan).setOnClickListener(this);
+
+        waitScanResult();
+
         return view;
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnStartScan:
-                ((RecorderActivity)getContext()).gotoNextStep();
-                break;
-        }
+    private void waitScanResult() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                int height = 50 + new Random().nextInt(20);
+                ((InfantScanActivity)getActivity()).setFrontHeight(height);
+            }
+        };
+
+        new Timer().schedule(task, 3000);
     }
 }

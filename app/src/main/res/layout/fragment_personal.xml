@@ -131,8 +131,7 @@
                 android:layout_height="24dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/location"
-                android:visibility="invisible"/>
+                android:src="@drawable/location" />
 
         </RelativeLayout>
 

@@ -19,15 +19,18 @@
 
 package de.welthungerhilfe.cgm.scanner.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
-
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import de.welthungerhilfe.cgm.scanner.R;
-import de.welthungerhilfe.cgm.scanner.activities.RecorderActivity;
+import de.welthungerhilfe.cgm.scanner.activities.InfantScanActivity;
+
+/**
+ * Created by Emerald on 2/20/2018.
+ */
 
 public class InfantTurnFragment extends Fragment implements View.OnClickListener {
 
@@ -44,7 +47,7 @@ public class InfantTurnFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnStartScan:
-                ((RecorderActivity)getActivity()).gotoNextStep();
+                ((InfantScanActivity)getActivity()).gotoNextStep();
                 break;
         }
     }

@@ -17,33 +17,40 @@
  *
  */
 
-package de.welthungerhilfe.cgm.scanner.fragments;
+package de.welthungerhilfe.cgm.scanner.activities;
 
-import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 import de.welthungerhilfe.cgm.scanner.R;
-import de.welthungerhilfe.cgm.scanner.activities.RecorderActivity;
 
-public class InfantFullFrontFragment extends Fragment implements View.OnClickListener {
+/**
+ * Created by Emerald on 2/20/2018.
+ */
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_infant_full, container, false);
+public class BodySelectActivity extends AppCompatActivity {
 
-        view.findViewById(R.id.btnStartScan).setOnClickListener(this);
-        return view;
+    @OnClick(R.id.btnBaby)
+    void scanBaby(Button btnBaby) {
+        startActivity(new Intent(BodySelectActivity.this, BabyScanActivity.class));
+
+        finish();
+    }
+    @OnClick(R.id.btnInfant)
+    void scanInfant(Button btnInfant) {
+        startActivity(new Intent(BodySelectActivity.this, InfantScanActivity.class));
+
+        finish();
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btnStartScan:
-                ((RecorderActivity)getContext()).gotoNextStep();
-                break;
-        }
+    protected void onCreate(Bundle saveBundle) {
+        super.onCreate(saveBundle);
+        setContentView(R.layout.activity_body_select);
+
+        ButterKnife.bind(this);
     }
 }
