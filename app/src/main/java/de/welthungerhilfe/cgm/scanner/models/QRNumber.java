@@ -19,36 +19,30 @@
 
 package de.welthungerhilfe.cgm.scanner.models;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 /**
- * Created by Emerald on 2/25/2018.
+ * Created by Emerald on 2/19/2018.
  */
 
-public class Consent {
-    private long created;
-    private String consent;
-    private String qrcode;
+public class QRNumber implements Serializable {
+    private String code;
+    private ArrayList<String> consents;
 
-    public long getCreated() {
-        return created;
+    public String getCode() {
+        return code;
     }
 
-    public void setCreated(long created) {
-        this.created = created;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getConsent() {
-        return consent;
+    public ArrayList<String> getConsents() {
+        return consents;
     }
 
-    public void setConsent(String consent) {
-        this.consent = consent;
-    }
-
-    public String getQrcode() {
-        return qrcode;
-    }
-
-    public void setQrcode(String qrcode) {
-        this.qrcode = qrcode;
+    public void setConsents(ArrayList<String> consents) {
+        this.consents = consents;
     }
 }

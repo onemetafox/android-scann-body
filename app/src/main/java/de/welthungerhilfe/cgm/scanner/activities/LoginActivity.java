@@ -103,8 +103,7 @@ public class LoginActivity extends BaseActivity {
         super.onStart();
 
         if (AppController.getInstance().firebaseUser != null && session.isSigned()) {
-            //startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            startActivity(new Intent(getApplicationContext(), PersonListActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
     }
