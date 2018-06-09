@@ -19,46 +19,31 @@
 
 package de.welthungerhilfe.cgm.scanner.models;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
 import java.util.List;
-
-import de.welthungerhilfe.cgm.scanner.helper.DbConstants;
 
 /**
  * Created by Emerald on 2/19/2018.
  */
 
-@Entity(tableName = DbConstants.TABLE_PERSON)
 public class Person implements Serializable {
-    @PrimaryKey
-    @NonNull
     private String id;  // firebase id
     private String name;
     private String surname;
     private long birthday;
     private String sex;  // female, male, other
     private String guardian;
-    private boolean isAgeEstimated;
-    private String qrcode;
     private long created;
-    private long timestamp;
-
-    @Ignore
+    private boolean isAgeEstimated;
     private Loc lastLocation;
-    @Ignore
+    private String qrcode;
     private Measure lastMeasure;
 
-    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -102,6 +87,14 @@ public class Person implements Serializable {
         this.guardian = guardian;
     }
 
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
+    }
+
     public String getQrcode() {
         return qrcode;
     }
@@ -132,21 +125,5 @@ public class Person implements Serializable {
 
     public void setAgeEstimated(boolean ageEstimated) {
         isAgeEstimated = ageEstimated;
-    }
-
-    public long getCreated() {
-        return created;
-    }
-
-    public void setCreated(long created) {
-        this.created = created;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
     }
 }

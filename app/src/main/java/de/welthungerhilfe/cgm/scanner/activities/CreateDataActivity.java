@@ -19,30 +19,22 @@
 
 package de.welthungerhilfe.cgm.scanner.activities;
 
-import android.Manifest;
 import android.app.SearchManager;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -70,7 +62,6 @@ import butterknife.ButterKnife;
 import de.welthungerhilfe.cgm.scanner.AppController;
 import de.welthungerhilfe.cgm.scanner.R;
 import de.welthungerhilfe.cgm.scanner.adapters.FragmentAdapter;
-import de.welthungerhilfe.cgm.scanner.adapters.RecyclerDataAdapter;
 import de.welthungerhilfe.cgm.scanner.fragments.GrowthDataFragment;
 import de.welthungerhilfe.cgm.scanner.fragments.MeasuresDataFragment;
 import de.welthungerhilfe.cgm.scanner.fragments.PersonalDataFragment;
@@ -80,10 +71,7 @@ import de.welthungerhilfe.cgm.scanner.models.Consent;
 import de.welthungerhilfe.cgm.scanner.models.Loc;
 import de.welthungerhilfe.cgm.scanner.models.Measure;
 import de.welthungerhilfe.cgm.scanner.models.Person;
-import de.welthungerhilfe.cgm.scanner.models.tasks.OfflineTask;
-import de.welthungerhilfe.cgm.scanner.utils.BitmapUtils;
-import de.welthungerhilfe.cgm.scanner.utils.Utils;
-import de.welthungerhilfe.cgm.scanner.viewmodels.PersonListViewModel;
+import de.welthungerhilfe.cgm.scanner.models.QRNumber;
 
 /**
  * Created by Emerald on 2/19/2018.
@@ -91,7 +79,6 @@ import de.welthungerhilfe.cgm.scanner.viewmodels.PersonListViewModel;
 
 public class CreateDataActivity extends BaseActivity {
     private final String TAG = CreateDataActivity.class.getSimpleName();
-    private final int PERMISSION_STORAGE = 0x001;
 
     public Person person;
     public ArrayList<Measure> measures;
@@ -114,8 +101,6 @@ public class CreateDataActivity extends BaseActivity {
     private MeasuresDataFragment measureFragment;
     private GrowthDataFragment growthFragment;
 
-    public PersonListViewModel viewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,8 +110,6 @@ public class CreateDataActivity extends BaseActivity {
 
         EventBus.getDefault().register(this);
 
-        viewModel = ViewModelProviders.of(this).get(PersonListViewModel.class);
-
         qrCode = getIntent().getStringExtra(AppConstants.EXTRA_QR);
         qrSource = getIntent().getByteArrayExtra(AppConstants.EXTRA_QR_BITMAP);
 
@@ -134,30 +117,18 @@ public class CreateDataActivity extends BaseActivity {
         measures = new ArrayList<>();
         consents = new ArrayList<>();
 
+
+
         if (qrCode != null) {
             checkQR();
-        } else {
-            loadMeasures();
-            loadConsents();
-
-            viewModel.getObservableMeasureList(person).observe(this, measures->{
-                measureFragment.addMeasures(measures);
-                //growthFragment.setChartData();
-            });
         }
 
-        /*
         if (person != null) {
             loadMeasures();
             loadConsents();
-
-            viewModel.getObservableMeasureList(person).observe(this, measures->{
-                int a = 0;
-            });
         } else {
             Log.w(TAG,"person was null");
         }
-        */
 
         setupActionBar();
         initFragments();
@@ -202,7 +173,6 @@ public class CreateDataActivity extends BaseActivity {
     }
 
     public void setPersonalData(String name, String surName, long birthday, boolean age, String sex, Loc loc, String guardian) {
-        /*
         boolean isNew = false;
         if (person == null) {
             if (qrPath == null) {
@@ -214,20 +184,17 @@ public class CreateDataActivity extends BaseActivity {
                 isNew = true;
 
                 person = new Person();
+                /*
+                QRNumber qrNumber = new QRNumber();
+                qrNumber.setCode(qrCode);
+                ArrayList<String> consents = new ArrayList<>();
+                consents.add(qrPath);
+                qrNumber.setConsents(consents);
+                */
                 person.setQrcode(qrCode);
             }
         }
-        */
 
-        boolean isNew = false;
-        if (person == null) {
-            isNew = true;
-
-            person = new Person();
-            person.setId(AppController.getInstance().getPersonId(name));
-        }
-
-        person.setQrcode(qrCode);
         person.setName(name);
         person.setSurname(surName);
         person.setLastLocation(loc);
@@ -236,7 +203,6 @@ public class CreateDataActivity extends BaseActivity {
         person.setSex(sex);
         person.setAgeEstimated(age);
         person.setCreated(System.currentTimeMillis());
-        person.setTimestamp(Utils.getUniversalTimestamp());
 
         if (isNew)
             createPerson();
@@ -245,8 +211,9 @@ public class CreateDataActivity extends BaseActivity {
     }
 
     public void setMeasureData(float height, float weight, float muac, float headCircumference, String additional, Loc location) {
+        showProgressDialog();
+
         final Measure measure = new Measure();
-        measure.setId(Utils.getSaltString(20));
         measure.setDate(System.currentTimeMillis());
         long age = (System.currentTimeMillis() - person.getBirthday()) / 1000 / 60 / 60 / 24;
         measure.setAge(age);
@@ -257,12 +224,6 @@ public class CreateDataActivity extends BaseActivity {
         measure.setArtifact(additional);
         measure.setLocation(location);
         measure.setType(AppConstants.VAL_MEASURE_MANUAL);
-        measure.setPersonId(person.getId());
-
-
-        new OfflineTask().saveMeasure(measure);
-        /*
-        showProgressDialog();
 
         AppController.getInstance().firebaseFirestore.collection("persons")
                 .document(person.getId())
@@ -295,20 +256,9 @@ public class CreateDataActivity extends BaseActivity {
                         hideProgressDialog();
                     }
                 });
-                */
     }
 
     private void createPerson() {
-        viewModel.createPerson(person);
-
-        viewModel.getObservablePerson(person.getId()).observe(this, p -> {
-            this.person = p;
-
-            if (personalFragment != null) {
-                personalFragment.initUI();
-            }
-        });
-        /*
         showProgressDialog();
 
         AppController.getInstance().firebaseFirestore.collection("persons")
@@ -365,7 +315,6 @@ public class CreateDataActivity extends BaseActivity {
                         startActivity(intent);
                     }
                 });
-                */
     }
 
     private void updatePerson() {
@@ -390,19 +339,6 @@ public class CreateDataActivity extends BaseActivity {
     }
 
     private void checkQR() {
-        viewModel.getObservablePersonByQr(qrCode).observe(this, p->{
-            person = p;
-
-            if (person != null) {
-                loadMeasures();
-                loadConsents();
-
-                viewModel.getObservableMeasureList(person).observe(this, measures->{
-                    measureFragment.addMeasures(measures);
-                });
-            }
-        });
-        /*
         AppController.getInstance().firebaseFirestore.collection("persons")
                 .whereEqualTo("qrcode", qrCode)
                 .get()
@@ -424,13 +360,11 @@ public class CreateDataActivity extends BaseActivity {
                         }
                     }
                 });
-                */
     }
 
     private void uploadQR() {
         if (qrSource == null)
             return;
-        /*
         //String consentPath = AppConstants.STORAGE_CONSENT_URL.replace("{id}", person.getId()) + System.currentTimeMillis() + "_" + qrCode + ".png";
         final String consentPath = AppConstants.STORAGE_CONSENT_URL.replace("{qrcode}",  qrCode) + System.currentTimeMillis() + "_" + qrCode + ".png";
         StorageReference consentRef = AppController.getInstance().storageRootRef.child(consentPath);
@@ -471,23 +405,6 @@ public class CreateDataActivity extends BaseActivity {
                 }
             }
         });
-        */
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"}, PERMISSION_STORAGE);
-        } else {
-            final String consentFile = Utils.getUniversalTimestamp() + "_" + qrCode + ".png";
-            BitmapUtils.saveBitmap(qrSource, consentFile);
-
-            if (person != null) {
-                Consent consent = new Consent();
-                consent.setCreated(System.currentTimeMillis());
-                consent.setConsent(consentFile);
-                if (qrCode != null)
-                    consent.setConsent(qrPath);
-                else
-                    consent.setQrcode(qrCode);
-            }
-        }
     }
 
     private void loadMeasures() {

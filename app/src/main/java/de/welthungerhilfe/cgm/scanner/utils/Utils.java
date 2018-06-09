@@ -18,13 +18,10 @@
 
 package de.welthungerhilfe.cgm.scanner.utils;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.location.Location;
-import android.provider.Settings;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -33,11 +30,8 @@ import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
-import java.util.TimeZone;
-import java.util.UUID;
 
 import de.welthungerhilfe.cgm.scanner.models.Loc;
 
@@ -54,16 +48,8 @@ public class Utils {
         }
     }
 
-    public static String getAndroidID(ContentResolver resolver) {
-        return Settings.Secure.getString(resolver, Settings.Secure.ANDROID_ID);
-    }
-
-    public static String getUUID() {
-        return UUID.randomUUID().toString();
-    }
-
     public static String getSaltString(int length) {
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890abcdefghijklmnopqrstuvwxyz";
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         StringBuilder salt = new StringBuilder();
         Random rnd = new Random();
         while (salt.length() < length) {
@@ -71,14 +57,8 @@ public class Utils {
             salt.append(SALTCHARS.charAt(index));
         }
         String saltStr = salt.toString();
-
         return saltStr;
-    }
 
-    public static long getUniversalTimestamp() {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-
-        return calendar.getTimeInMillis();
     }
 
     public static boolean checkPermission (Context context, String permission) {

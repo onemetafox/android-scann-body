@@ -19,13 +19,8 @@
 
 package de.welthungerhilfe.cgm.scanner.activities;
 
-import android.accounts.Account;
-import android.accounts.AccountAuthenticatorActivity;
-import android.accounts.AccountManager;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.WindowManager;
@@ -45,10 +40,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.welthungerhilfe.cgm.scanner.AppController;
 import de.welthungerhilfe.cgm.scanner.R;
-import de.welthungerhilfe.cgm.scanner.helper.AppConstants;
 import de.welthungerhilfe.cgm.scanner.helper.SessionManager;
 
-public class LoginActivity extends AccountAuthenticatorActivity {
+public class LoginActivity extends BaseActivity {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -81,7 +75,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     }
 
     private SessionManager session;
-    private AccountManager accountManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,8 +83,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
-
-        accountManager = AccountManager.get(this);
 
         editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -142,6 +133,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
     public void createUser(String email, String password) {
         if (true) { // Validation check
+            showProgressDialog();
             AppController.getInstance().firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -152,6 +144,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                         } else {
 
                         }
+
+                        hideProgressDialog();
                     }
                 });
         }
@@ -163,32 +157,20 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             String password = editPassword.getText().toString();
             Crashlytics.setUserIdentifier(email);
 
+            showProgressDialog();
+
             AppController.getInstance().firebaseAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                final Account account = new Account(email, AppConstants.ACCOUNT_TYPE);
-
-                                accountManager.addAccountExplicitly(account, password, null);
-
-                                ContentResolver.setSyncAutomatically(account, ContactsContract.AUTHORITY, true);
-
-                                final Intent intent = new Intent();
-                                intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, email);
-                                intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, AppConstants.ACCOUNT_TYPE);
-                                intent.putExtra(AccountManager.KEY_AUTHTOKEN, password);
-
-                                setAccountAuthenticatorResult(intent.getExtras());
-                                setResult(RESULT_OK, intent);
-
-
                                 session.setSigned(true);
                                 AppController.getInstance().prepareFirebaseUser();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, "Login Failed", Toast.LENGTH_LONG).show();
                             }
+                            hideProgressDialog();
                         }
                     });
         }

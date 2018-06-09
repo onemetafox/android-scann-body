@@ -40,8 +40,6 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.crashlytics.android.Crashlytics;
 
-import java.util.List;
-
 import de.welthungerhilfe.cgm.scanner.R;
 
 import de.welthungerhilfe.cgm.scanner.activities.CreateDataActivity;
@@ -93,10 +91,6 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
 
     public void addMeasure(Measure measure) {
         adapterMeasure.addMeasure(measure);
-    }
-
-    public void addMeasures(List<Measure> measures) {
-        adapterMeasure.addMeasures(measures);
     }
 
     public void createMeasure() {

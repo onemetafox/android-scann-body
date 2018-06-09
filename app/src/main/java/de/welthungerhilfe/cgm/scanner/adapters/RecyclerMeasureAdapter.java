@@ -108,11 +108,6 @@ public class RecyclerMeasureAdapter extends RecyclerView.Adapter<RecyclerMeasure
         notifyItemInserted(0);
     }
 
-    public void addMeasures(List<Measure> measures) {
-        measureList.addAll(0, measures);
-        notifyDataSetChanged();
-    }
-
     public class ViewHolder extends RecyclerView.ViewHolder {
         public EditText editDate;
         public EditText editLocation;

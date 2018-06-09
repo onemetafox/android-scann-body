@@ -27,12 +27,6 @@
     </group>
     <group>
         <item
-            android:id="@+id/menuVersion"
-            android:icon="@drawable/home"
-            android:title="Build Version" />
-    </group>
-    <group>
-        <item
             android:id="@+id/menuLogout"
             android:icon="@drawable/logout"
             android:title="Logout"/>
