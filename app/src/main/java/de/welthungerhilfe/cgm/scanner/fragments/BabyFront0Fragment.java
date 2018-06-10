@@ -40,7 +40,6 @@ public class BabyFront0Fragment extends Fragment implements View.OnClickListener
         View view = inflater.inflate(R.layout.fragment_baby_front0, container, false);
 
         view.findViewById(R.id.btnStartScan).setOnClickListener(this);
-        view.findViewById(R.id.baby_front0).setOnClickListener(this);
 
         return view;
     }
@@ -49,9 +48,6 @@ public class BabyFront0Fragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnStartScan:
-                ((RecorderActivity)getActivity()).gotoNextStep();
-                break;
-            case R.id.baby_front0:
                 ((RecorderActivity)getActivity()).gotoNextStep();
                 break;
         }
