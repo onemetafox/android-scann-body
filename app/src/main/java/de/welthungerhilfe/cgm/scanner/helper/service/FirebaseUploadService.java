@@ -66,7 +66,6 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
 
     private String qrCode;
     private String scanTimestamp;
-    private String subfolder;
 
     @Override
     public void onCreate() {
@@ -91,15 +90,14 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
             qrCode = intent.getStringExtra(AppConstants.EXTRA_QR);
             scanTimestamp = intent.getStringExtra(AppConstants.EXTRA_SCANTIMESTAMP);
-            subfolder = intent.getStringExtra(AppConstants.EXTRA_SCANARTEFACT_SUBFOLDER);
-            uploadFromUri(fileUri, subfolder);
+            uploadFromUri(fileUri);
         }
 
         return START_REDELIVER_INTENT;
     }
 
     // [START upload_from_uri]
-    private void uploadFromUri(final Uri fileUri, String subfolder) {
+    private void uploadFromUri(final Uri fileUri) {
         Log.d(TAG, "uploadFromUri:src:" + fileUri.toString());
 
         // [START_EXCLUDE]
@@ -109,7 +107,7 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
 
         // [START get_child_ref]
         // Get a reference to store file at STORAGE_MEASURE_URL = "/data/person/{qrcode}/measurements/{scantimestamp}/";
-        final String pcPath = STORAGE_MEASURE_URL.replace("{qrcode}",  qrCode).replace("{scantimestamp}", scanTimestamp) + "/" + subfolder;
+        final String pcPath = STORAGE_MEASURE_URL.replace("{qrcode}",  qrCode).replace("{scantimestamp}", scanTimestamp) + "/";
         final StorageReference photoRef = mStorageRef.child(pcPath)
                 .child(fileUri.getLastPathSegment());
         // [END get_child_ref]

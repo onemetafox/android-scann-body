@@ -59,7 +59,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements OfflineT
         new OfflineTask().getSyncableMeasure(this, prevTimestamp);
 
         AppController.getInstance().firebaseFirestore.collection("persons")
-                .whereGreaterThan("timestamp", prevTimestamp)
+                //.whereGreaterThan("timestamp", prevTimestamp)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -68,12 +68,44 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements OfflineT
                             for (DocumentSnapshot document : task.getResult()) {
                                 Person person = document.toObject(Person.class);
 
-                                String[] arr = person.getId().split("_");
-                                if (Long.valueOf(arr[2]) > prevTimestamp) {     // person created after sync, so must add to local room
-                                    OfflineRepository.getInstance().createPerson(person);
-                                } else {    // created before sync, after sync person was updates, so must update in local room
-                                    OfflineRepository.getInstance().updatePerson(person);
+                                if (person.getTimestamp() > prevTimestamp) {
+                                    String[] arr = person.getId().split("_");
+                                    if (Long.valueOf(arr[2]) > prevTimestamp) {     // person created after sync, so must add to local room
+                                        OfflineRepository.getInstance().createPerson(person);
+                                    } else {    // created before sync, after sync person was updates, so must update in local room
+                                        OfflineRepository.getInstance().updatePerson(person);
+                                    }
                                 }
+
+                                document.getReference().collection("measures")
+                                        .whereGreaterThan("timestamp", prevTimestamp)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (DocumentSnapshot snapshot : task.getResult()) {
+                                                        Measure measure = snapshot.toObject(Measure.class);
+
+                                                        String[] arr = measure.getId().split("_");
+
+                                                        if (Long.valueOf(arr[2]) > prevTimestamp) {     // person created after sync, so must add to local room
+                                                            OfflineRepository.getInstance().createMeasure(measure);
+                                                        } else {    // created before sync, after sync person was updates, so must update in local room
+                                                            OfflineRepository.getInstance().updateMeasure(measure);
+                                                        }
+                                                    }
+
+                                                    session.setSyncTimestamp(Utils.getUniversalTimestamp());
+                                                }
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                session.setSyncTimestamp(prevTimestamp);
+                                            }
+                                        });
                             }
 
                             session.setSyncTimestamp(Utils.getUniversalTimestamp());
@@ -152,8 +184,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements OfflineT
             AppController.getInstance().firebaseFirestore.collection("persons")
                     .document(measureList.get(i).getPersonId())
                     .collection("measures")
-                    .document(measureList.get(i).getId())
-                    .set(measureList.get(i))
+                    .add(measureList.get(i))
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
@@ -162,9 +193,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter implements OfflineT
                             session.setSyncTimestamp(prevTimestamp);
                         }
                     })
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
-                        public void onSuccess(Void aVoid) {
+                        public void onSuccess(DocumentReference documentReference) {
                             OfflineRepository.getInstance().updateMeasure(measureList.get(finalI));
 
                             session.setSyncTimestamp(Utils.getUniversalTimestamp());
