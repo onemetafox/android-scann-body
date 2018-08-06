@@ -34,8 +34,8 @@ public class AppConstants {
     //public static final String STORAGE_ROOT_URL = "gs://child-growth-monitor.appspot.com";
     //public static final String STORAGE_ROOT_URL = "gs://child-growth-monitor-dev.appspot.com";
 
-    public static final String LOCAL_CONSENT_URL = "/{qrcode}/consent/{scantimestamp}/consent/";
-    public static final String STORAGE_CONSENT_URL = "/data/person/{qrcode}/consent/{scantimestamp}/";
+    public static final String LOCAL_CONSENT_URL = "/{qrcode}/consent/";
+    public static final String STORAGE_CONSENT_URL = "/data/person/{qrcode}/consent/";
     public static final String STORAGE_PC_URL = "/data/person/{qrcode}/measurements/{scantimestamp}/pc/";
     public static final String STORAGE_RGB_URL = "/data/person/{qrcode}/measurements/{scantimestamp}/rgb/";
 
@@ -65,7 +65,6 @@ public class AppConstants {
     public static final String PARAM_AUTH_NAME = "auth_name";
     public static final String PARAM_AUTH_CONFIRM = "auth_confirm";
 
-    public static final String CONFIG_MEASURE_VISIBILITY = "measure_visibility";
 
     public static final String AUTHTOKEN_TYPE = "de.welthungerhilfe.cgm.scanner";
     public static final String ACCOUNT_TYPE = "de.welthungerhilfe.cgm.scanner";

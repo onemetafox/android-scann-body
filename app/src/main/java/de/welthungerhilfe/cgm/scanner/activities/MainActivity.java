@@ -291,8 +291,7 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
             }
         });
 
-        File root = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath());
-        iterateLocalFiles(root);
+        checkLocalFiles();
         checkDeletedRecords();
 
         startService(new Intent(this, FileLogMonitorService.class));
@@ -458,49 +457,12 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
         adapterData.clearFitlers();
     }
 
-    private void iterateLocalFiles(File target) {
-        if (target.isFile()) {
-            new OfflineTask().getFileLog(target.getPath(), new OfflineTask.OnLoadFileLog() {
-                @Override
-                public void onLoadFileLog(FileLog log) {
-                    if (log != null) {
-                        String logUrl = "";
-                        if (log.getType().equals("consent")) {
-                            logUrl = AppConstants.STORAGE_CONSENT_URL;
-                        } else if (log.getType().equals("pcd")) {
-                            logUrl = AppConstants.STORAGE_PC_URL;
-                        } else if (log.getType().equals("rgb")) {
-                            logUrl = AppConstants.STORAGE_RGB_URL;
-                        }
-                        startService(new Intent(MainActivity.this, FirebaseUploadService.class)
-                                .putExtra(FirebaseUploadService.EXTRA_FILE_URI, Uri.fromFile(target))
-                                .putExtra(AppConstants.EXTRA_QR, log.getQrCode())
-                                .putExtra(AppConstants.EXTRA_SCANTIMESTAMP, String.valueOf(log.getCreateDate()))
-                                .putExtra(AppConstants.EXTRA_SCANARTEFACT_SUBFOLDER, logUrl)
-                                .setAction(FirebaseUploadService.ACTION_UPLOAD));
-                    }
-                }
-            });
-        } else {
-            File[] children = target.listFiles();
-
-            if (children.length == 0) {
-                target.delete();
-            } else {
-                for (File child : children) {
-                    iterateLocalFiles(child);
-                }
-            }
-        }
-    }
-
-    /*
     private void checkLocalFiles() {
         File root = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath());
         File[] qrCodes = root.listFiles();
         for (File qrCode : qrCodes) {
 
-            if (qrCode.isDirectory()) {
+            if (qrCode.isDirectory()) { //
                 File[] measurements = qrCode.listFiles();
 
                 for (File measure : measurements) {
@@ -516,7 +478,7 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
                                 new OfflineTask().getFileLog(data.getPath(), new OfflineTask.OnLoadFileLog() {
                                     @Override
                                     public void onLoadFileLog(FileLog log) {
-                                        if (log != null) {
+                                        if (log == null) {
                                             startService(new Intent(MainActivity.this, FirebaseUploadService.class)
                                                     .putExtra(FirebaseUploadService.EXTRA_FILE_URI, Uri.fromFile(data))
                                                     .putExtra(AppConstants.EXTRA_QR, qrCode.getName())
@@ -533,7 +495,6 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
             }
         }
     }
-    */
 
     private void checkDeletedRecords() {
         new OfflineTask().deleteRecords(session.getSyncTimestamp());
