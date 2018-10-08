@@ -42,7 +42,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.bumptech.glide.util.Util;
 import com.crashlytics.android.Crashlytics;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.welthungerhilfe.cgm.scanner.AppController;
@@ -50,7 +49,6 @@ import de.welthungerhilfe.cgm.scanner.R;
 
 import de.welthungerhilfe.cgm.scanner.activities.CreateDataActivity;
 import de.welthungerhilfe.cgm.scanner.activities.RecorderActivity;
-import de.welthungerhilfe.cgm.scanner.activities.ScanModeActivity;
 import de.welthungerhilfe.cgm.scanner.adapters.RecyclerMeasureAdapter;
 import de.welthungerhilfe.cgm.scanner.dialogs.ConfirmDialog;
 import de.welthungerhilfe.cgm.scanner.dialogs.ManualMeasureDialog;
@@ -91,10 +89,7 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
         View view = inflater.inflate(R.layout.fragment_measure, container, false);
         
         recyclerMeasure = view.findViewById(R.id.recyclerMeasure);
-        if (context != null)
-            adapterMeasure = new RecyclerMeasureAdapter(context, ((CreateDataActivity)context).measures);
-        else
-            adapterMeasure = new RecyclerMeasureAdapter(context, new ArrayList<>());
+        adapterMeasure = new RecyclerMeasureAdapter(context, ((CreateDataActivity)context).measures);
         adapterMeasure.setMeasureSelectListener(this);
         recyclerMeasure.setAdapter(adapterMeasure);
         recyclerMeasure.setLayoutManager(new LinearLayoutManager(context));
@@ -152,8 +147,7 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
                             dialog.setMeasure(measure);
                             dialog.show();
                         } else {
-                            //Intent intent = new Intent(getContext(), RecorderActivity.class);
-                            Intent intent = new Intent(getContext(), ScanModeActivity.class);
+                            Intent intent = new Intent(getContext(), RecorderActivity.class);
                             intent.putExtra(AppConstants.EXTRA_PERSON, ((CreateDataActivity)context).person);
                             intent.putExtra(AppConstants.EXTRA_MEASURE, measure);
                             startActivity(intent);
@@ -216,8 +210,8 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
                     dialog.setManualMeasureListener(MeasuresDataFragment.this);
                     dialog.show();
                 } else if (which == 1) {
-                    //Intent intent = new Intent(getContext(), RecorderActivity.class);
-                    Intent intent = new Intent(getContext(), ScanModeActivity.class);
+                    //Intent intent = new Intent(getContext(), ScreenRecordActivity.class);
+                    Intent intent = new Intent(getContext(), RecorderActivity.class);
                     intent.putExtra(AppConstants.EXTRA_PERSON, ((CreateDataActivity)context).person);
                     startActivity(intent);
                 }
