@@ -78,6 +78,7 @@ import de.welthungerhilfe.cgm.scanner.fragments.MeasuresDataFragment;
 import de.welthungerhilfe.cgm.scanner.fragments.PersonalDataFragment;
 import de.welthungerhilfe.cgm.scanner.helper.AppConstants;
 import de.welthungerhilfe.cgm.scanner.helper.events.MeasureResult;
+import de.welthungerhilfe.cgm.scanner.helper.service.FirebaseUploadService;
 import de.welthungerhilfe.cgm.scanner.models.Consent;
 import de.welthungerhilfe.cgm.scanner.models.FileLog;
 import de.welthungerhilfe.cgm.scanner.models.Loc;
@@ -188,11 +189,11 @@ public class CreateDataActivity extends BaseActivity {
 
     private void initFragments() {
         if (personalFragment == null)
-            personalFragment = new PersonalDataFragment();
+            personalFragment = PersonalDataFragment.newInstance(this);
         if (measureFragment == null)
             measureFragment = new MeasuresDataFragment();
         if (growthFragment == null)
-            growthFragment = new GrowthDataFragment();
+            growthFragment = GrowthDataFragment.newInstance(this);
     }
 
     private void initUI() {
@@ -468,9 +469,8 @@ public class CreateDataActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == PERMISSION_LOCATION) {
-            if (grantResults.length > 0 && grantResults[0] >= 0)
-                getCurrentLocation();
+        if (requestCode == PERMISSION_LOCATION && grantResults[0] >= 0) {
+            getCurrentLocation();
         }
     }
 }
