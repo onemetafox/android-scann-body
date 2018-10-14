@@ -62,7 +62,6 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
     public static final String UPLOAD_ERROR = "upload_error";
 
     /** Intent Extras **/
-    public static final String EXTRA_LOG_ID = "extra_log_id";
     public static final String EXTRA_FILE_URI = "extra_file_uri";
     public static final String EXTRA_DOWNLOAD_URL = "extra_download_url";
 
@@ -71,7 +70,7 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
     private FirebaseAuth mAuth;
     // [END declare_ref]
 
-    private String logId;
+
     private String qrCode;
     private String scanTimestamp;
     private String subfolder;
@@ -105,7 +104,6 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
         */
         Log.d(TAG, "starting FirebaseUploadService as user: "+mAuth.getCurrentUser().getDisplayName());
         if (ACTION_UPLOAD.equals(intent.getAction())) {
-            logId = intent.getStringExtra(EXTRA_LOG_ID);
             Uri fileUri = intent.getParcelableExtra(EXTRA_FILE_URI);
             qrCode = intent.getStringExtra(AppConstants.EXTRA_QR);
             scanTimestamp = intent.getStringExtra(AppConstants.EXTRA_SCANTIMESTAMP);
@@ -128,13 +126,9 @@ public class FirebaseUploadService extends FirebaseBaseTaskService {
 
         // [START get_child_ref]
         // Get a reference to store file at STORAGE_MEASURE_URL = "/data/person/{qrcode}/measurements/{scantimestamp}/";
-        String pcPath = storageUrl;
+        final String pcPath = storageUrl;
         try {
-            pcPath = pcPath.replace("{qrcode}",  qrCode).replace("{scantimestamp}", scanTimestamp);
-
-            if (pcPath.contains("{qrcode}") || pcPath.contains("scantimestamp")) {
-                Log.e("FirebaseUploadService", String.format("id: %s, qrcode: %s, scantimestamp: %s", logId, qrCode, scanTimestamp));
-            }
+            pcPath.replace("{qrcode}",  qrCode).replace("{scantimestamp}", scanTimestamp);
 
             final StorageReference photoRef = mStorageRef.child(pcPath)
                     .child(fileUri.getLastPathSegment());

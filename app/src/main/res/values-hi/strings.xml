@@ -30,6 +30,7 @@
     <string name="next">सहेजें / सेव</string>
     <string name="delete">Delete</string>
     <string name="by">by</string>
+    <string name="retake">Retake</string>
 
     <string name="about">के बारे में</string>
     <string name="version">संस्करण</string>
@@ -180,4 +181,8 @@
     <string name="exception_tango_invalid">टैंगो अवैध अपवाद! पुनः प्रयास करें!</string>
     <string name="exception_out_of_date">टैंगो कोर ऐप अपडेट करें!</string>
 
+    <string name="mode_standing">Standing up</string>
+    <string name="mode_lying">Lying down</string>
+
+    <string name="capture_inside">Capture the child inside of outline</string>
 </resources>
