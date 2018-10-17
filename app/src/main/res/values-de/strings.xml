@@ -42,6 +42,7 @@
     <string name="lang_german">Deutsch</string>
     <string name="lang_hindi">Hindi</string>
 
+    <string name="filter">Filter</string>
     <string name="sortby">Sortierung</string>
     <string name="date">Datum</string>
     <string name="last_days">letzte %1$d Tage</string>
@@ -56,6 +57,8 @@
     <string name="clear_filters">Filter zurücksetzen</string>
     <string name="no_persons">KEINE PERSONEN REGISTRIERT</string>
     <string name="circuit">Umkreis</string>
+    <string name="own_data">Only own data</string>
+    <string name="created_by_self">show only children created by myself</string>
 
     <string name="manual_measure">manuelle Messung</string>
     <string name="machine_measure">Scan</string>
@@ -69,6 +72,7 @@
 
     <string name="start_scan">Start Scan</string>
     <string name="retake_scan">Retake Scan</string>
+    <string name="complete_scan">Complete Scan</string>
     <string name="axis_y">Y Achse</string>
     <string name="axis_x">X Achse</string>
     <string name="username">Benutzername</string>
