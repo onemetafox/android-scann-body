@@ -112,10 +112,10 @@
         <activity android:name=".activities.ImageDetailActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.RecorderActivity"
+        <activity android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.SettingsActivity"
+        <activity android:name=".activities.ScanModeActivity"
             android:screenOrientation="portrait" />
 
         <service
