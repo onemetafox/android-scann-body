@@ -146,21 +146,9 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
                     @Override
                     public void onClick(DialogPlus dialog, View view) {
                         switch (view.getId()) {
-                            case R.id.rytFilterData:
-                                break;
-                            case R.id.rytFilterLocation:
-                                dialog.getHolderView().findViewById(R.id.imgSortDate).setVisibility(View.INVISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgFilterLocation).setVisibility(View.VISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgSortWasting).setVisibility(View.INVISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgSortStunting).setVisibility(View.INVISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgSortClear).setVisibility(View.INVISIBLE);
-                                dialog.dismiss();
-
-                                doFilterByLocation();
-                                break;
                             case R.id.rytSortDate:
                                 dialog.getHolderView().findViewById(R.id.imgSortDate).setVisibility(View.VISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgFilterLocation).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortLocation).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortWasting).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortStunting).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortClear).setVisibility(View.INVISIBLE);
@@ -168,10 +156,19 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
 
                                 doSortByDate();
                                 break;
+                            case R.id.rytSortLocation:
+                                dialog.getHolderView().findViewById(R.id.imgSortDate).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortLocation).setVisibility(View.VISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortWasting).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortStunting).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortClear).setVisibility(View.INVISIBLE);
+                                dialog.dismiss();
 
+                                doSortByLocation();
+                                break;
                             case R.id.rytSortWasting:
                                 dialog.getHolderView().findViewById(R.id.imgSortDate).setVisibility(View.INVISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgFilterLocation).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortLocation).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortWasting).setVisibility(View.VISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortStunting).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortClear).setVisibility(View.INVISIBLE);
@@ -183,7 +180,7 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
                                 break;
                             case R.id.rytSortStunting:
                                 dialog.getHolderView().findViewById(R.id.imgSortDate).setVisibility(View.INVISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgFilterLocation).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortLocation).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortWasting).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortStunting).setVisibility(View.VISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortClear).setVisibility(View.INVISIBLE);
@@ -195,7 +192,7 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
                                 break;
                             case R.id.rytSortClear:
                                 dialog.getHolderView().findViewById(R.id.imgSortDate).setVisibility(View.INVISIBLE);
-                                dialog.getHolderView().findViewById(R.id.imgFilterLocation).setVisibility(View.INVISIBLE);
+                                dialog.getHolderView().findViewById(R.id.imgSortLocation).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortWasting).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortStunting).setVisibility(View.INVISIBLE);
                                 dialog.getHolderView().findViewById(R.id.imgSortClear).setVisibility(View.VISIBLE);
@@ -220,7 +217,7 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
         }
 
         ImageView imgSortDate = sortDialog.getHolderView().findViewById(R.id.imgSortDate);
-        ImageView imgSortLocation = sortDialog.getHolderView().findViewById(R.id.imgFilterLocation);
+        ImageView imgSortLocation = sortDialog.getHolderView().findViewById(R.id.imgSortLocation);
         ImageView imgSortWasting = sortDialog.getHolderView().findViewById(R.id.imgSortWasting);
         ImageView imgSortStunting = sortDialog.getHolderView().findViewById(R.id.imgSortStunting);
         ImageView imgSortClear = sortDialog.getHolderView().findViewById(R.id.imgSortClear);
@@ -304,11 +301,9 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{"android.permission.WRITE_EXTERNAL_STORAGE"}, PERMISSION_STORAGE);
         } else {
-            /*
             File root = getExternalFilesDir(Environment.getDataDirectory().getAbsolutePath());
             iterateLocalFiles(root);
             checkDeletedRecords();
-            */
         }
 
         startService(new Intent(this, FileLogMonitorService.class));
@@ -450,7 +445,7 @@ public class MainActivity extends BaseActivity implements RecyclerDataAdapter.On
         dateRangePicker.show(getFragmentManager(), "DATE_RANGE_PICKER");
     }
 
-    private void doFilterByLocation() {
+    private void doSortByLocation() {
         sortType = 2;
 
         Intent intent = new Intent(MainActivity.this, LocationSearchActivity.class);
