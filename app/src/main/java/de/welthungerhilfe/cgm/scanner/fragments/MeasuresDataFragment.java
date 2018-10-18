@@ -36,7 +36,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 //import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 
@@ -165,7 +164,25 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
         fabCreate = view.findViewById(R.id.fabCreate);
         fabCreate.setOnClickListener(this);
 
+        fetchRemoteConfig();
+
         return view;
+    }
+
+    private void fetchRemoteConfig() {
+        long cacheExpiration = 3600 * 3;
+        if (AppController.getInstance().firebaseConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            cacheExpiration = 0;
+        }
+
+        AppController.getInstance().firebaseConfig.fetch(cacheExpiration)
+                .addOnSuccessListener(aVoid -> {
+                    AppController.getInstance().firebaseConfig.activateFetched();
+                    adapterMeasure.changeManualVisibility();
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                });
     }
 
     public void addMeasure(Measure measure) {
@@ -203,12 +220,7 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
                 }
             }
         });
-        try {
-            builder.show();
-        } catch (RuntimeException e) {
-            Toast.makeText(context, "Sorry, something wrong", Toast.LENGTH_SHORT).show();
-            Crashlytics.log(0, "measure fragment", e.getMessage());
-        }
+        builder.show();
     }
 
     @Override

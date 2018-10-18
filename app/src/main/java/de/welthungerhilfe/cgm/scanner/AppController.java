@@ -18,7 +18,6 @@
 
 package de.welthungerhilfe.cgm.scanner;
 
-import android.app.ActivityManager;
 import android.app.Application;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
@@ -27,13 +26,9 @@ import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 //import com.amitshekhar.DebugDB;
 import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.BuildConfig;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.crashlytics.android.core.CrashlyticsListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -116,18 +111,8 @@ public class AppController extends Application {
     public void onCreate() {
         super.onCreate();
 
-        CrashlyticsCore core = new CrashlyticsCore
-                .Builder()
-                .listener(new CrashlyticsListener() {
-                    @Override
-                    public void crashlyticsDidDetectCrashDuringPreviousExecution() {
-                        // TODO: do something when crash occurs
-                    }
-                })
-                .build();
-
         final Fabric fabric = new Fabric.Builder(this)
-                .kits(new Crashlytics.Builder().core(core).build())
+                .kits(new Crashlytics())
                 .debuggable(true)
                 .build();
         Fabric.with(fabric);
