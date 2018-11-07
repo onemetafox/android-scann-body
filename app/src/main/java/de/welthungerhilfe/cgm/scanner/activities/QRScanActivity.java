@@ -25,12 +25,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import de.welthungerhilfe.cgm.scanner.R;
 import de.welthungerhilfe.cgm.scanner.dialogs.ConfirmDialog;
 import de.welthungerhilfe.cgm.scanner.helper.AppConstants;
@@ -45,21 +41,14 @@ public class QRScanActivity extends AppCompatActivity implements ConfirmDialog.O
     private final String TAG = QRScanActivity.class.getSimpleName();
     private final int PERMISSION_LOCATION = 0x1000;
 
-    @BindView(R.id.qrScanView)
-    QRScanView qrScanView;
-
-    @OnClick(R.id.imgClose)
-    void close(ImageView imgClose) {
-        finish();
-    }
+    private QRScanView qrScanView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //qrScanView = new QRScanView(this);
-        setContentView(R.layout.activity_scan_qr);
-        ButterKnife.bind(this);
+        qrScanView = new QRScanView(this);
+        setContentView(qrScanView);
 
         try {
             ConfirmDialog confirmDialog = new ConfirmDialog(this);

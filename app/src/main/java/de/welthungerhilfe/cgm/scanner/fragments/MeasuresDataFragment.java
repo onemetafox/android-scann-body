@@ -19,6 +19,7 @@
 
 package de.welthungerhilfe.cgm.scanner.fragments;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,7 +28,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,14 +43,13 @@ import android.widget.Toast;
 import com.bumptech.glide.util.Util;
 import com.crashlytics.android.Crashlytics;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.welthungerhilfe.cgm.scanner.AppController;
 import de.welthungerhilfe.cgm.scanner.R;
 
 import de.welthungerhilfe.cgm.scanner.activities.CreateDataActivity;
-import de.welthungerhilfe.cgm.scanner.activities.ScanModeActivity;
+import de.welthungerhilfe.cgm.scanner.activities.RecorderActivity;
 import de.welthungerhilfe.cgm.scanner.adapters.RecyclerMeasureAdapter;
 import de.welthungerhilfe.cgm.scanner.dialogs.ConfirmDialog;
 import de.welthungerhilfe.cgm.scanner.dialogs.ManualMeasureDialog;
@@ -149,8 +148,7 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
                             dialog.setMeasure(measure);
                             dialog.show();
                         } else {
-                            //Intent intent = new Intent(getContext(), RecorderActivity.class);
-                            Intent intent = new Intent(getContext(), ScanModeActivity.class);
+                            Intent intent = new Intent(getContext(), RecorderActivity.class);
                             intent.putExtra(AppConstants.EXTRA_PERSON, ((CreateDataActivity)context).person);
                             intent.putExtra(AppConstants.EXTRA_MEASURE, measure);
                             startActivity(intent);
@@ -187,25 +185,28 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
     public void createMeasure() {
         if (context == null)
             return;
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.title_add_measure);
-            builder.setItems(R.array.selector_measure, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface d, int which) {
-                    if (which == 0) {
-                        ManualMeasureDialog dialog = new ManualMeasureDialog(context);
-                        dialog.setManualMeasureListener(MeasuresDataFragment.this);
-                        dialog.show();
-                    } else if (which == 1) {
-                        Intent intent = new Intent(getContext(), ScanModeActivity.class);
-                        intent.putExtra(AppConstants.EXTRA_PERSON, ((CreateDataActivity)context).person);
-                        startActivity(intent);
-                    }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.title_add_measure);
+        builder.setItems(R.array.selector_measure, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface d, int which) {
+                if (which == 0) {
+                    ManualMeasureDialog dialog = new ManualMeasureDialog(context);
+                    dialog.setManualMeasureListener(MeasuresDataFragment.this);
+                    dialog.show();
+                } else if (which == 1) {
+                    //Intent intent = new Intent(getContext(), ScreenRecordActivity.class);
+                    Intent intent = new Intent(context, RecorderActivity.class);
+                    intent.putExtra(AppConstants.EXTRA_PERSON, ((CreateDataActivity)context).person);
+                    startActivity(intent);
                 }
-            });
+            }
+        });
+        try {
             builder.show();
         } catch (RuntimeException e) {
+            Toast.makeText(context, "Sorry, something wrong", Toast.LENGTH_SHORT).show();
             Crashlytics.log(0, "measure fragment", e.getMessage());
         }
     }
@@ -231,14 +232,10 @@ public class MeasuresDataFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onMeasureSelect(Measure measure) {
-        try {
-            ManualMeasureDialog dialog = new ManualMeasureDialog(context);
-            dialog.setManualMeasureListener(MeasuresDataFragment.this);
-            dialog.setMeasure(measure);
-            dialog.setEditable(false);
-            dialog.show();
-        } catch (RuntimeException e) {
-            Crashlytics.log(0, "measure fragment", e.getMessage());
-        }
+        ManualMeasureDialog dialog = new ManualMeasureDialog(context);
+        dialog.setManualMeasureListener(MeasuresDataFragment.this);
+        dialog.setMeasure(measure);
+        dialog.setEditable(false);
+        dialog.show();
     }
 }

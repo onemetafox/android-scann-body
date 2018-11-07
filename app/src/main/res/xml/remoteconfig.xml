@@ -24,8 +24,4 @@
         <key>debug</key>
         <value>false</value>
     </entry>
-    <entry>
-        <key>sync_period</key>
-        <value>5</value>
-    </entry>
 </defaultsMap>
