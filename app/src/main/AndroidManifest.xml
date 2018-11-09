@@ -93,10 +93,14 @@
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"/>
 
+        <activity android:name=".activities.TutorialActivity"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".activities.QRScanActivity"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".activities.CreateDataActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -112,10 +116,10 @@
         <activity android:name=".activities.ImageDetailActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.RecorderActivity"
+        <activity android:name=".activities.SettingsActivity"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.SettingsActivity"
+        <activity android:name=".activities.ScanModeActivity"
             android:screenOrientation="portrait" />
 
         <service
