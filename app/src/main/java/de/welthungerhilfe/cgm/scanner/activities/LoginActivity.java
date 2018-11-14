@@ -73,7 +73,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         doSignInAction();
     }
 
-    /*
     @OnClick(R.id.txtCancel)
     void doSignOut(TextView txtCancel) {
         AppController.getInstance().firebaseAuth.signOut();
@@ -81,7 +80,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
         //createUser("zhangnemo34@hotmail.com", "Crystal");
     }
-    */
 
     @OnClick(R.id.txtForgot)
     void doForgot(TextView txtForgot) {
@@ -120,10 +118,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         super.onStart();
 
         if (AppController.getInstance().firebaseUser != null && session.isSigned()) {
-            if (session.getTutorial())
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-            else
-                startActivity(new Intent(getApplicationContext(), TutorialActivity.class));
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
     }
@@ -159,11 +154,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             session.setSigned(true);
-                            if (session.getTutorial())
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                            else
-                                startActivity(new Intent(getApplicationContext(), TutorialActivity.class));
-                            finish();
+                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        } else {
+
                         }
                     }
                 });
@@ -202,11 +195,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
                                 session.setSigned(true);
                                 AppController.getInstance().prepareFirebaseUser();
-                                if (session.getTutorial())
-                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                else
-                                    startActivity(new Intent(getApplicationContext(), TutorialActivity.class));
-                                finish();
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             } else {
                                 Toast.makeText(LoginActivity.this, R.string.error_login, Toast.LENGTH_LONG).show();
                             }

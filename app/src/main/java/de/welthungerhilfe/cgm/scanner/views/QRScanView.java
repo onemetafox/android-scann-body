@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.welthungerhilfe.cgm.scanner.utils.BitmapUtils;
-import io.fabric.sdk.android.services.common.Crash;
 import me.dm7.barcodescanner.core.BarcodeScannerView;
 import me.dm7.barcodescanner.core.DisplayUtils;
 
