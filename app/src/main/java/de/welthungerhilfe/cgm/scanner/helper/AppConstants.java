@@ -46,7 +46,7 @@ public class AppConstants {
     public static final String VAL_SEX_MALE = "male";
 
     public static final String VAL_MEASURE_MANUAL = "manual";
-    public static final String VAL_MEASURE_AUTO = "v0.1";
+    public static final String VAL_MEASURE_AUTO = "v0.2";
 
     public static final String LANG_ENGLISH = "en";
     public static final String LANG_GERMAN = "de";
@@ -63,6 +63,7 @@ public class AppConstants {
     public static final String EXTRA_SCANTIMESTAMP = "extra_scantimestamp";
     public static final String EXTRA_SCANARTEFACT_SUBFOLDER = "extra_scanartefact_subfolder";
     public static final String EXTRA_ARTEFACT = "extra_artefact";
+    public static final String EXTRA_TUTORIAL_AGAIN = "extra_tutorial_again";
 
     public static final String PARAM_AUTHTOKEN_TYPE = "authtoken_type";
     public static final String PARAM_AUTH_NAME = "auth_name";
@@ -78,6 +79,16 @@ public class AppConstants {
     public static final String AUTHTOKEN_TYPE = "de.welthungerhilfe.cgm.scanner";
     public static final String ACCOUNT_TYPE = "de.welthungerhilfe.cgm.scanner";
 
+    public static final int SCAN_STANDING = 0x00;
+    public static final int SCAN_LYING = 0x01;
+
+    public static final int SCAN_PREVIEW = 0;
+    public static final int SCAN_STANDING_FRONT = 100;
+    public static final int SCAN_STANDING_SIDE = 101;
+    public static final int SCAN_STANDING_BACK = 102;
+    public static final int SCAN_LYING_FRONT = 200;
+    public static final int SCAN_LYING_SIDE = 201;
+    public static final int SCAN_LYING_BACK = 202;
 
     // Workflow
     public static final int CHOOSE_BABY_OR_INFANT = 0;
@@ -92,5 +103,4 @@ public class AppConstants {
     public static final int BABY_FULL_BODY_BACK_SCAN = 108;
     public static final int BABY_FULL_BODY_BACK_RECORDING = 109;
     public static final int STANDING_INFANT_SCAN = 200;
-
 }
