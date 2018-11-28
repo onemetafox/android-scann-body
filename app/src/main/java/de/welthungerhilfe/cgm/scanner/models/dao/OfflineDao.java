@@ -45,6 +45,9 @@ public interface OfflineDao {
     @Query("SELECT * FROM " + DbConstants.TABLE_PERSON + " WHERE deleted=0")
     LiveData<List<Person>> getPersons();
 
+    @Query("SELECT * FROM " + DbConstants.TABLE_PERSON + " WHERE deleted=0 AND createdBy=:email")
+    LiveData<List<Person>> getOwnPersons(String email);
+
     @Query("SELECT * FROM " + DbConstants.TABLE_PERSON + " WHERE id=:id AND deleted=0")
     LiveData<Person> getPerson(String id);
 
@@ -87,13 +90,17 @@ public interface OfflineDao {
     @Query("SELECT * FROM " + DbConstants.TABLE_MEASURE + " WHERE timestamp>:timestamp")
     List<Measure> getSyncableMeasure(long timestamp);
 
+    @Query("SELECT * FROM " + DbConstants.TABLE_MEASURE + " WHERE id=:id")
+    Measure findMeasure(String id);
+
     @Insert(onConflict = REPLACE)
     void saveMeasure(Measure measure);
 
-    /*
+    @Query("UPDATE " + DbConstants.TABLE_MEASURE + " SET height=:height, muac=:muac, weight=:weight, headCircumference=:head, timestamp=:timestamp WHERE id=:id")
+    void updateScanResult(String id, double height, double weight, double muac, double head, long timestamp);
+
     @Update(onConflict = REPLACE)
     void updateMeasure(Measure measure);
-    */
 
     @Delete
     void deleteMeasure(Measure measure);
